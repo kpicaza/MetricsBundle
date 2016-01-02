@@ -1,0 +1,19 @@
+parameters:
+    kpicaza_metrics.visited_page_manager.class: Kpicaza\Bundle\MetricsBundle\Model\VisitedPageManager
+    kpicaza_metrics.global_visits_manager.class: Kpicaza\Bundle\MetricsBundle\Model\GlobalVisitsManager
+
+services:
+    kpicaza_metrics.visited_page_manager:
+        class: "%kpicaza_metrics.visited_page_manager.class%"
+        arguments: [ "@doctrine.orm.default_entity_manager", "@event_dispatcher", "@kpicaza_metrics.global_visits_manager" ]
+
+    kpicaza_metrics.global_visits_manager:
+        class: "%kpicaza_metrics.global_visits_manager.class%"
+        arguments: [ "@doctrine.orm.default_entity_manager", "%kpicaza_metrics.entities%"]
+
+    kpicaza_metrics.twig_extension:
+        class: Kpicaza\Bundle\MetricsBundle\Twig\MetricsExtension
+        public: false
+        arguments: [ "@doctrine.orm.default_entity_manager", "@kpicaza_metrics.global_visits_manager", "%kpicaza_metrics.entities%" ]
+        tags:
+            - { name: twig.extension }

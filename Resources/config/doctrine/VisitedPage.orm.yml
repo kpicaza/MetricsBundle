@@ -1,0 +1,17 @@
+## YAML Template.
+Kpicaza\Bundle\MetricsBundle\Entity\VisitedPage:
+    type: entity
+    repositoryClass: Kpicaza\Bundle\MetricsBundle\Entity\VisitedPageRepository
+    table: visited_page
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        uri:
+            type: text
+            length: 255
+        created_at:
+            type: datetime
+    lifecycleCallbacks:
+        prePersist: [ setCreatedAtValue ]

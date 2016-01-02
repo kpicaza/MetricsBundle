@@ -1,0 +1,32 @@
+## YAML Template.
+Kpicaza\Bundle\MetricsBundle\Entity\GlobalVisits:
+    type: entity
+    repositoryClass: Kpicaza\Bundle\MetricsBundle\Entity\GlobalVisitsRepository
+    table: global_visits
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        uri:
+            type: text
+            length: 255
+        number_visits:
+            type: integer
+            length: 21
+        view_type:
+            type: text
+            length: 255
+        entity_id:
+            type: integer
+            length: 21
+            nullable: true
+        created_at:
+            type: datetime
+        updated_at:
+            type: datetime 
+            nullable: true
+    lifecycleCallbacks:
+        prePersist: [ setCreatedAtValue ]
+        preUpdate: [ setUpdatedAtValue ]
+            

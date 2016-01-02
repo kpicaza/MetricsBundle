@@ -1,0 +1,3 @@
+kpicaza_metrics_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: KpicazaMetricsBundle:Default:index }

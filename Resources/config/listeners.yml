@@ -1,0 +1,5 @@
+services:
+    kpicaza_metrics.event_listener:
+        class: Kpicaza\Bundle\MetricsBundle\EventListener\VisitedPageListener
+        tags:
+            - { name: "kpicaza_metrics.event_listener", event: "kpicaza_metrics.pre_save_visited_page", method: "onPresaveVisitedPage" }
