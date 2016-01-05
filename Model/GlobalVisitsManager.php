@@ -10,7 +10,6 @@ use Kpicaza\Bundle\MetricsBundle\Entity\GlobalVisits;
  */
 class GlobalVisitsManager
 {
-
     /**
      *
      * @var EntityManager 

@@ -23,6 +23,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->booleanNode('track_admins')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->defaultFalse()
+                ->end()
                 ->booleanNode('enable_blocks')
                     ->isRequired()
                     ->cannotBeEmpty()

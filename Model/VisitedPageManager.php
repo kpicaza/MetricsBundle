@@ -4,6 +4,7 @@ namespace Kpicaza\Bundle\MetricsBundle\Model;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Kpicaza\Bundle\MetricsBundle\Entity\VisitedPage;
 use Kpicaza\Bundle\MetricsBundle\Event\VisitedPageEvent;
 use Kpicaza\Bundle\MetricsBundle\Event\MetricsEvents;
@@ -17,10 +18,16 @@ class VisitedPageManager
 
     /**
      *
+     * @var AuthorizationCheckerInterface 
+     */
+    protected $authChecker;
+
+    /**
+     *
      * @var EntityManager 
      */
     protected $em;
-    
+
     /**
      *
      * @var EventDispatcherInterface 
@@ -31,14 +38,29 @@ class VisitedPageManager
      *
      * @var GlobalVisitsManager 
      */
-    private $gvm;
+    protected $gvm;
 
+    /**
+     *
+     * @var boolean
+     */
+    protected $trackAdmins;
 
-    public function __construct(EntityManager $em, EventDispatcherInterface $dispatcher, GlobalVisitsManager $gvm)
+    /**
+     * 
+     * @param AuthorizationCheckerInterface $authChecker
+     * @param EntityManager $em
+     * @param EventDispatcherInterface $dispatcher
+     * @param GlobalVisitsManager $gvm
+     * @param type $trackAdmins
+     */
+    public function __construct(AuthorizationCheckerInterface $authChecker, EntityManager $em, EventDispatcherInterface $dispatcher, GlobalVisitsManager $gvm, $trackAdmins)
     {
         $this->em = $em;
         $this->dispatcher = $dispatcher;
         $this->gvm = $gvm;
+        $this->authChecker = $authChecker;
+        $this->trackAdmins = $trackAdmins;
     }
 
     /**
@@ -49,6 +71,10 @@ class VisitedPageManager
      */
     public function createVisitedPage($uri, $entity = null)
     {
+        if (false === $this->trackAdmins && true === $this->authChecker->isGranted('ROLE_ADMIN')) {
+            return;
+        }
+
         $visited_page = new VisitedPage();
 
         $event = new VisitedPageEvent($visited_page);
@@ -57,7 +83,7 @@ class VisitedPageManager
         $visited_page->setUri($uri);
 
         $this->em->persist($visited_page);
-        
+
         $globalVisits = $this->gvm->findOneGlobalVisitByUri($uri);
         if (null === $globalVisits) {
             $globalVisits = $this->gvm->createGlobalVisit($uri, $entity);
@@ -65,7 +91,7 @@ class VisitedPageManager
         else {
             $globalVisits = $this->gvm->updateGlobalVisit($uri);
         }
-        
+
         $this->em->flush();
 
         return $visited_page;

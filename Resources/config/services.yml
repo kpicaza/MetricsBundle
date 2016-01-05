@@ -5,7 +5,7 @@ parameters:
 services:
     kpicaza_metrics.visited_page_manager:
         class: "%kpicaza_metrics.visited_page_manager.class%"
-        arguments: [ "@doctrine.orm.default_entity_manager", "@event_dispatcher", "@kpicaza_metrics.global_visits_manager" ]
+        arguments: [ "@security.authorization_checker", "@doctrine.orm.default_entity_manager", "@event_dispatcher", "@kpicaza_metrics.global_visits_manager", "%kpicaza_metrics.track_admins%" ]
 
     kpicaza_metrics.global_visits_manager:
         class: "%kpicaza_metrics.global_visits_manager.class%"

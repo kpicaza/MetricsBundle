@@ -23,6 +23,7 @@ class KpicazaMetricsExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter($this->getAlias() . '.track_admins', $config['track_admins']);
         $container->setParameter($this->getAlias() . '.entities', $config['entities']);
         if (true === $config['enable_blocks']) {
             foreach ($config['entities'] as $key => $value) {
